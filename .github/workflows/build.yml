@@ -53,7 +53,7 @@ jobs:
         with:
           context: .
           platforms: ${{ matrix.platform }}
-          target: runtime
+          target: developer
           build-args: |
             IMAGE_EXT=${{ matrix.extension }}
           cache-from: type=gha,scope=${{ matrix.epics-target }}
@@ -76,30 +76,6 @@ jobs:
           build-args: |
             IMAGE_EXT=${{ matrix.extension }}
           tags: ${{ env.TAG }}-developer:${{ github.ref_name }}
-          push: true
-
-      - name: Push runtime image
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: ${{ matrix.platform }}
-          target: runtime
-          build-args: |
-            IMAGE_EXT=${{ matrix.extension }}
-          tags: ${{ env.TAG }}-runtime:${{ github.ref_name }}
-          push: true
-
-      - name: Push demo image
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          platforms: ${{ matrix.platform }}
-          target: demo
-          build-args: |
-            IMAGE_EXT=${{ matrix.extension }}
-          tags: ${{ env.TAG }}-demo:${{ github.ref_name }}
           push: true
 
   release:

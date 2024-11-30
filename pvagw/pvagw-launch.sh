@@ -10,6 +10,9 @@
 #
 this_dir=$(dirname $0)
 
+# docker takes a few seconds to get the network up ? podman is fine but
+# with docker the broadcast address was coming out as hosts
+sleep 3
 # determine the broadcast address of the container network
 broadcast=$(ifconfig | sed -rn 's/^.*broadcast (.*)$/\1/p')
 # add the broadcast address to the pva gateway config

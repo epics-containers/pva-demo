@@ -17,7 +17,7 @@ args="--rm -it"
 ca="-p 127.0.0.1:5064:5064/udp -p 127.0.0.1:5064-5065:5064-5065"
 pva="-p 127.0.0.1:5076:5076/udp -p 127.0.0.1:5075:5075"
 vols="-v /tmp:/tmp"
-image="ghcr.io/epics-containers/pvagw-demo:2024.11.1"
+image="ghcr.io/epics-containers/pva-demo-developer:2024.11.2"
 
 set -x
 $docker run $args $ca $pva $vols $image
