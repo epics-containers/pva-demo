@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://github.com/epics-containers/ioc-adsimdetector/releases/download/2024.8.2/ibek.ioc.schema.json
+
+ioc_name: "{{ _global.get_env('IOC_NAME') }}"
+
+description: Example simulated camera
+
+entities:
+  - type: epics.EpicsEnvSet
+    name: EPICS_TZ
+    value: GMT0BST
+
+  - type: devIocStats.iocAdminSoft
+    IOC: "{{ ioc_name | upper }}"
+
+  - type: ADSimDetector.simDetector
+    PORT: DET.DET
+    P: BL01T-EA-TST-02
+    R: ":DET:"
+
+  - type: ADCore.NDPvaPlugin
+    PORT: DET.PVA
+    PVNAME: BL01T-EA-TST-02:PVA:OUTPUT
+    P: BL01T-EA-TST-02
+    R: ":PVA:"
+    NDARRAY_PORT: DET.DET
+
+  - type: ADCore.NDStdArrays
+    PORT: DET.ARR
+    P: BL01T-EA-TST-02
+    R: ":ARR:"
+    NDARRAY_PORT: DET.DET
+    TYPE: Int8
+    FTVL: CHAR
+    NELEMENTS: 1310720
