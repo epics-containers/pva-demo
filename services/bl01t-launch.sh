@@ -14,10 +14,12 @@ if podman version &> /dev/null && [[ -z $USE_DOCKER ]]
 fi
 echo "Using $docker as container runtime"
 
-args="--rm -it"
+mkdir -p $this_dir/../opi/auto-generated
+
+args="--rm -it --security-opt=label=disable --user $UIDGID"
 ca="-p 127.0.0.1:5064:5064/udp -p 127.0.0.1:5064-5065:5064-5065"
 pva="-p 127.0.0.1:5076:5076/udp -p 127.0.0.1:5075:5075"
-vols="-v /tmp:/tmp"
+vols="-v /tmp:/tmp -v $this_dir/../opi/auto-generated:/epics/opi"
 image="ghcr.io/epics-containers/pva-demo-developer:2024.11.2"
 
 set -x

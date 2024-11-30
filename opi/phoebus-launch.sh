@@ -11,12 +11,12 @@ settings="
 -settings ${workspace}/opi/settings.ini
 "
 
-if which phoebus.sh &>/dev/null ; then
+if which XXphoebus.sh &>/dev/null ; then
     echo "Using phoebus.sh from PATH"
     set -x
     phoebus.sh ${settings} "${@}"
 
-elif module load phoebus 2>/dev/null; then
+elif module load XXphoebus 2>/dev/null; then
     echo "Using phoebus module"
     set -x
     phoebus.sh ${settings} "${@}"
@@ -36,7 +36,7 @@ else
 
     # settings for container launch
     x11="-e DISPLAY --net host"
-    args="--rm -it --security-opt=label=none --user ${UIDGID}"
+    args="--rm -it --security-opt=label=disable --user ${UIDGID}"
     mounts="-v=/tmp:/tmp -v=${workspace}:/workspace"
     image="ghcr.io/epics-containers/ec-phoebus:latest"
 
