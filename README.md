@@ -44,8 +44,12 @@ It was not possible to bind the PVA ports to localhost only as we do with CA. Th
 
 So this means that the pvgw may be getting requests from outside of the local workstation. However it meets the isolation requirement of the demo by only looking for servers in the container network.
 
-```xml
-
 Note that this approach can work with multiple containers as long as they are in the same container network.
 
+## Notes
 
+I have this working with podman 5.0.3. Interestingly this uses pasta networking and the container network is not NAT'd (containers get the same address and subnet as host). So potentially PVA might work in this scenario. But I've not worked out all the implications of this yet. I'm a little concerned that the isolation will fail in this case.
+
+Right now when I run under docker I get the hosts broadcast address too and it is therefore not working. This is odd because if I exec in and check the broadcast address - it is the docker container one.
+
+TODO: try this out on podman at DLS.
