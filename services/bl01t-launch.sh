@@ -7,11 +7,12 @@
 #
 this_dir=$(dirname $0)
 
-# prefer docker but use podman if USE_PODMAN is set
-if docker version &> /dev/null && [[ -z $USE_PODMAN ]]
-    then docker=docker
-    else docker=podman
+# prefer podman but use docker if USE_DOCKER is set
+if podman version &> /dev/null && [[ -z $USE_DOCKER ]]
+    then docker=podman; UIDGID=0:0
+    else docker=docker; UIDGID=$(id -u):$(id -g)
 fi
+echo "Using $docker as container runtime"
 
 args="--rm -it"
 ca="-p 127.0.0.1:5064:5064/udp -p 127.0.0.1:5064-5065:5064-5065"

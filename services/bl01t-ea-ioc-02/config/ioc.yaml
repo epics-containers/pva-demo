@@ -32,3 +32,8 @@ entities:
     TYPE: Int8
     FTVL: CHAR
     NELEMENTS: 1310720
+
+  - type: epics.PostStartupCommand
+    command: |
+      dbpf BL01T-EA-TST-02:PVA:EnableCallbacks 1
+      dbpf BL01T-EA-TST-02:DET:Acquire 1

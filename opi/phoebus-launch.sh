@@ -24,12 +24,11 @@ elif module load phoebus 2>/dev/null; then
 else
     echo "No local phoebus install found, using a container"
 
-    # prefer docker but use podman if USE_PODMAN is set
-    if docker version &> /dev/null && [[ -z $USE_PODMAN ]]
-        then docker=docker
-        else docker=podman
+    # prefer podman but use docker if USE_DOCKER is set
+    if podman version &> /dev/null && [[ -z $USE_DOCKER ]]
+        then docker=podman; UIDGID=0:0
+        else docker=docker; UIDGID=$(id -u):$(id -g)
     fi
-
     echo "Using $docker as container runtime"
 
     # ensure local container users can access X11 server
@@ -37,7 +36,7 @@ else
 
     # settings for container launch
     x11="-e DISPLAY --net host"
-    args="--rm -it --security-opt=label=none"
+    args="--rm -it --security-opt=label=none --user ${UIDGID}"
     mounts="-v=/tmp:/tmp -v=${workspace}:/workspace"
     image="ghcr.io/epics-containers/ec-phoebus:latest"
 
