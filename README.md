@@ -4,7 +4,18 @@ Demonstrates the use of a pvxs server using 'name server' to get around issues w
 
 This is intended for experimentation and is intended to be isolated to a single workstation.
 
-## Running the demo IOC
+## Running the demo in a developer container
+
+Load the developer container and:
+
+```bash
+cd /epics/ioc
+make
+ibek dev instance /workspaces/pva-demo/services/bl01t-ea-ioc-02/
+/workspaces/pva-demo/pvagw/pvagw-launch.sh
+```
+
+## Running the demo IOC without devcontainer
 
 ```bash
 ./services/bl01t-launch.sh
@@ -13,17 +24,8 @@ This launches the IOC in a container but also configures and launches pvgw in th
 
 We do this because Areadetector does not use PVXS and therefore does not support nameserver. We use pvgw to bridge the gap. I believe that pvxs PVs would be addressable directly in this fashion and the gateway would not be necessary (not tested).
 
-Key things to note. The ports are exposed as follows
-```bash
-args="--rm -it"
-ca="-p 127.0.0.1:5064:5064/udp -p 127.0.0.1:5064-5065:5064-5065"
-pva="-p 127.0.0.1:5076:5076/udp -p 127.0.0.1:5075:5075"
-vols="-v /tmp:/tmp"
-image="ghcr.io/epics-containers/pvagw-demo:2024.11.1"
+Key things to note: The port 5075 is exposed on all interfaces as tcp only. UDP is not exposed as the broadcast will fail anyway. The 5075 port is used to make a TCP connection to the name server. This is an IANA assigned port for PVA see https://epics-controls.org/wp-content/uploads/2018/10/pvAccess-Protocol-Specification.pdf.
 
-set -x
-$docker run $args $ca $pva $vols $image
-```
 
 ## Running Phoebus to demonstrate a client seeing the PVAccess server
 
@@ -50,6 +52,6 @@ Note that this approach can work with multiple containers as long as they are in
 
 I have this working with podman 5.0.3. Interestingly this uses pasta networking and the container network is not NAT'd (containers get the same address and subnet as host). So potentially PVA might work in this scenario. But I've not worked out all the implications of this yet. I'm a little concerned that the isolation will fail in this case.
 
-Right now when I run under docker I get the hosts broadcast address too and it is therefore not working. This is odd because if I exec in and check the broadcast address - it is the docker container one.
+UPDATE: this also works with podman 4.9.4 at DLS. So the name server TCP connection is able to traverse a NAT. Thus this is a success.
 
-TODO: try this out on podman at DLS.
+TODO: test with docker.
