@@ -1,4 +1,4 @@
-FROM ghcr.io/epics-containers/ioc-adsimdetector-developer:2024.9.1 AS developer
+FROM ghcr.io/epics-containers/ioc-adsimdetector-developer:2024.12.2 AS developer
 
 # get some dependencies
 RUN pip install p4p
